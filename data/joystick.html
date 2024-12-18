@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP Motor Control</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="joystick-container">
+            <div id="joystick-area">
+                <div id="stick"></div>
+            </div>
+        </div>
+        <div class="status-panel">
+            <div id="connection-status">Connected</div>
+            <div id="direction-status">Stopped</div>
+        </div>
+    </div>
+    <script>
+        class Joystick {
+            constructor(containerElement) {
+                this.container = containerElement;
+                this.stick = containerElement.querySelector('#stick');
+                this.bounds = this.container.getBoundingClientRect();
+                this.centerX = this.bounds.width / 2;
+                this.centerY = this.bounds.height / 2;
+                this.active = false;
+                this.currentDirection = 'stop';
+
+                this.setupEvents();
+            }
+
+            setupEvents() {
+                this.container.addEventListener('mousedown', (e) => this.handleStart(e));
+                document.addEventListener('mousemove', (e) => this.handleMove(e));
+                document.addEventListener('mouseup', () => this.handleEnd());
+
+                // Touch events for mobile
+                this.container.addEventListener('touchstart', (e) => this.handleStart(e.touches[0]));
+                document.addEventListener('touchmove', (e) => this.handleMove(e.touches[0]));
+                document.addEventListener('touchend', () => this.handleEnd());
+            }
+
+            handleStart(e) {
+                this.active = true;
+                this.move(e.clientX, e.clientY);
+            }
+
+            handleMove(e) {
+                if (this.active) {
+                    this.move(e.clientX, e.clientY);
+                }
+            }
+
+            handleEnd() {
+                this.active = false;
+                this.stick.style.transform = `translate(0px, 0px)`;
+                this.sendCommand('stop');
+            }
+
+            move(clientX, clientY) {
+                const bounds = this.container.getBoundingClientRect();
+                const x = clientX - bounds.left - this.centerX;
+                const y = clientY - bounds.top - this.centerY;
+                
+                const distance = Math.min(Math.sqrt(x*x + y*y), 50);
+                const angle = Math.atan2(y, x);
+                
+                const moveX = Math.cos(angle) * distance;
+                const moveY = Math.sin(angle) * distance;
+                
+                this.stick.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                this.determineDirection(moveX, moveY);
+            }
+
+            determineDirection(x, y) {
+                const threshold = 25;
+                let direction = 'stop';
+
+                if (Math.abs(x) > Math.abs(y)) {
+                    if (x > threshold) direction = 'right';
+                    else if (x < -threshold) direction = 'left';
+                } else {
+                    if (y > threshold) direction = 'backward';
+                    else if (y < -threshold) direction = 'forward';
+                }
+
+                if (direction !== this.currentDirection) {
+                    this.currentDirection = direction;
+                    this.sendCommand(direction);
+                }
+            }
+
+            sendCommand(command) {
+                fetch(`/control?cmd=${command}`)
+                    .then(response => {
+                        document.getElementById('direction-status').textContent = 
+                            command.charAt(0).toUpperCase() + command.slice(1);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        document.getElementById('connection-status').textContent = 'Disconnected';
+                    });
+            }
+        }
+
+        // Initialize joystick when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new Joystick(document.getElementById('joystick-area'));
+        });
+    </script>
+</body>
+</html>

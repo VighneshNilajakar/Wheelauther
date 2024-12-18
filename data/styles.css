@@ -1,0 +1,86 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.joystick-container {
+    width: 300px;
+    height: 300px;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#joystick-area {
+    width: 200px;
+    height: 200px;
+    background-color: #eee;
+    border-radius: 50%;
+    position: relative;
+    touch-action: none;
+}
+
+#stick {
+    width: 60px;
+    height: 60px;
+    background-color: #2196F3;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.status-panel {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+#connection-status {
+    color: #4CAF50;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#direction-status {
+    color: #2196F3;
+    font-weight: bold;
+}
+
+@media (max-width: 480px) {
+    .joystick-container {
+        width: 250px;
+        height: 250px;
+    }
+
+    #joystick-area {
+        width: 150px;
+        height: 150px;
+    }
+
+    #stick {
+        width: 50px;
+        height: 50px;
+    }
+}
