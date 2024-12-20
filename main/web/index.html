@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ESP8266 Control Panel</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="mode-selector">
+        <button onclick="switchMode('motor')">Motor Control</button>
+        <button onclick="switchMode('deauther')">Deauther</button>
+    </div>
+    
+    <div id="motor-panel" class="panel">
+        <!-- Existing joystick interface -->
+    </div>
+    
+    <div id="deauther-panel" class="panel">
+        <!-- Deauther controls -->
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

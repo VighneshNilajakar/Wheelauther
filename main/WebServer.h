@@ -1,20 +1,20 @@
 #ifndef WEB_SERVER_H
 #define WEB_SERVER_H
 
-#include <ESPAsyncWebServer.h>
-#include "MotorControl.h"
+#include <ESP8266WebServer.h>
+#include "ModeManager.h"
 
-class WebServer {
-public:
-    WebServer();
-    void begin(MotorControl* motorControl);
-    
+class WebServerManager {
 private:
-    AsyncWebServer server;
-    MotorControl* motorControl;
+    static ESP8266WebServer server;
+    static void handleRoot();
+    static void handleModeSwitch();
+    static void handleMotorControl();
+    static void handleDeautherControl();
     
-    void setupRoutes();
-    void handleCommand(AsyncWebServerRequest* request);
+public:
+    static void initialize();
+    static void handle();
 };
 
-#endif // WEB_SERVER_H 
+#endif

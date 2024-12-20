@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ESP8266 Control Panel</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="mode-selector">
+        <button onclick="switchMode('motor')">Motor Control</button>
+        <button onclick="switchMode('deauther')">Network Tools</button>
+    </div>
+    
+    <div id="motor-controls" class="panel">
+        <!-- Existing joystick controls -->
+    </div>
+    
+    <div id="deauther-controls" class="panel" style="display:none;">
+        <button onclick="startScan()">Start Scan</button>
+        <button onclick="stopScan()">Stop Scan</button>
+        <div id="scan-results"></div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
